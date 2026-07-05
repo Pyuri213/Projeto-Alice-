@@ -268,7 +268,18 @@ export default function App() {
     // Load guest messages
     const savedMessages = localStorage.getItem("moana_alice_messages");
     if (savedMessages) {
-      setGuestMessages(JSON.parse(savedMessages));
+      try {
+        const parsed = JSON.parse(savedMessages);
+        // Filter out any leftover mock messages to clean the list completely
+        const filtered = Array.isArray(parsed) ? parsed.filter(
+          (msg: any) => msg.name !== "Mamãe e Papai" && msg.name !== "Vovó Tala" && msg.name !== "Tia Carol"
+        ) : [];
+        setGuestMessages(filtered);
+        localStorage.setItem("moana_alice_messages", JSON.stringify(filtered));
+      } catch (e) {
+        setGuestMessages([]);
+        localStorage.setItem("moana_alice_messages", JSON.stringify([]));
+      }
     } else {
       setGuestMessages([]);
       localStorage.setItem("moana_alice_messages", JSON.stringify([]));
@@ -691,7 +702,7 @@ export default function App() {
                 </div>
 
                 {/* Live Message Form */}
-                <form onSubmit={handleSendMessage} className="mt-3 pt-3 border-t border-teal-500/10 flex flex-col gap-2">
+                <form onSubmit={handleSendMessage} className="mt-3 pt-3 border-t border-teal-500/10 flex flex-col gap-2.5">
                    <div className="flex gap-2">
                       <input 
                          type="text" 
@@ -709,13 +720,32 @@ export default function App() {
                          required
                          className="flex-[2] bg-teal-950/60 border border-teal-500/20 rounded-xl px-2.5 py-1.5 text-[11px] text-white placeholder-teal-600 focus:outline-none focus:border-amber-400 transition-all"
                       />
-                      <button 
-                         type="submit"
-                         className="bg-amber-500 hover:bg-orange-500 text-teal-950 hover:text-white p-1.5 rounded-xl transition-all flex items-center justify-center cursor-pointer"
-                      >
-                         <Send className="w-3.5 h-3.5" />
-                      </button>
                    </div>
+                   
+                   <motion.button 
+                      id="btn-send-message"
+                      type="submit"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      animate={{
+                         boxShadow: [
+                            "0 0 0px rgba(245, 158, 11, 0.2)",
+                            "0 0 15px rgba(245, 158, 11, 0.5)",
+                            "0 0 0px rgba(245, 158, 11, 0.2)"
+                         ]
+                      }}
+                      transition={{
+                         boxShadow: {
+                            repeat: Infinity,
+                            duration: 2.5,
+                            ease: "easeInOut"
+                         }
+                      }}
+                      className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-teal-950 font-bold uppercase tracking-widest text-[9px] py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-md hover:text-white"
+                   >
+                      <span>Enviar Mensagem</span>
+                      <Send className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                   </motion.button>
                 </form>
               </div>
 
