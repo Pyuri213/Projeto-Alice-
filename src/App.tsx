@@ -421,7 +421,7 @@ export default function App() {
 
     setTimeout(() => {
       setIsOpen(true);
-    }, 2000);
+    }, 1300);
   };
 
   const handleRSVPSubmit = (e: React.FormEvent) => {
@@ -508,8 +508,24 @@ export default function App() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-center mb-8"
+              className="text-center mb-8 relative"
             >
+              {/* Sparkles / Glow Effects */}
+              <motion.div 
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.8, 0.3], rotate: [0, 15, -15, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute -top-4 -left-4 text-amber-400 opacity-65"
+              >
+                <Sparkles className="w-5 h-5" />
+              </motion.div>
+              <motion.div 
+                animate={{ scale: [1.2, 1, 1.2], opacity: [0.8, 0.3, 0.8], rotate: [0, -15, 15, 0] }}
+                transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
+                className="absolute -bottom-2 -right-4 text-teal-400 opacity-65"
+              >
+                <Sparkles className="w-4 h-4" />
+              </motion.div>
+
               <div className="flex justify-center items-center gap-2 mb-2 text-purple-700">
                 <Sun className="w-5 h-5 animate-spin-slow text-orange-500" />
                 <span className="text-xs font-sans tracking-[0.3em] uppercase font-bold text-purple-800">UM CONVITE ALÉM DO HORIZONTE</span>
@@ -526,7 +542,7 @@ export default function App() {
               {/* Back flap (envelope base) */}
               <motion.div 
                 animate={isOpening ? { rotateX: -180, z: -10 } : {}}
-                transition={{ duration: 1, ease: "easeInOut" }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
                 style={{ transformOrigin: "top" }}
                 className="absolute inset-x-4 bottom-0 h-4/5 bg-gradient-to-b from-[#f2ecfc] to-[#e6f1f2] border-b border-x border-purple-200/40 rounded-b-3xl shadow-[0_15px_40px_rgba(107,33,168,0.1)] z-10 flex items-center justify-center overflow-hidden"
               >
@@ -536,8 +552,8 @@ export default function App() {
                 
                 {/* Invitation card inside peeking out slightly */}
                 <motion.div
-                  animate={isOpening ? { y: -100, scale: 1.05, opacity: 1 } : { y: 0 }}
-                  transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+                  animate={isOpening ? { y: -140, scale: 1.05, opacity: 1 } : { y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.7, ease: "backOut" }}
                   className="w-11/12 h-5/6 bg-gradient-to-b from-white to-[#fafcff] border border-amber-300/30 rounded-2xl flex flex-col items-center justify-center p-4 shadow-2xl relative"
                 >
                    <p className="font-sans text-[10px] tracking-widest text-purple-600 font-bold">CONVITE DE ANIVERSÁRIO</p>
@@ -557,7 +573,7 @@ export default function App() {
               {/* Seal Wax Flap (glowing Te Fiti Heart Spiral) */}
               <motion.div
                 animate={isOpening ? { rotateX: 180, z: -20, opacity: 0 } : {}}
-                transition={{ duration: 1, ease: "easeInOut" }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
                 style={{ transformOrigin: "top", clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
                 className="absolute inset-x-4 top-1/5 h-1/2 bg-gradient-to-b from-[#faf8fd] to-[#f3edf9] border-t border-x border-purple-200/30 rounded-t-3xl z-30 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] flex flex-col items-center justify-center"
               >
@@ -645,7 +661,23 @@ export default function App() {
               </div>
 
               {/* Top logo header */}
-              <div className="text-center mt-4">
+              <div className="text-center mt-4 relative">
+                {/* Floating header sparkles */}
+                <motion.div 
+                  animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.4, 0.9, 0.4] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                  className="absolute top-0 left-12 text-amber-400"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                </motion.div>
+                <motion.div 
+                  animate={{ scale: [1.2, 0.8, 1.2], opacity: [0.9, 0.4, 0.9] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                  className="absolute bottom-1 right-12 text-teal-400"
+                >
+                  <Sparkles className="w-3 h-3" />
+                </motion.div>
+
                 <span className="text-[9px] font-sans text-purple-600 tracking-[0.4em] uppercase font-bold flex items-center justify-center gap-1">
                    <Sun className="w-3.5 h-3.5 text-orange-500" /> MEU ANIVERSÁRIO <Sun className="w-3.5 h-3.5 text-orange-500" />
                 </span>
@@ -817,44 +849,50 @@ export default function App() {
               {/* CONTATOS / DÚVIDAS CARD */}
               <div className="bg-white/80 backdrop-blur-md border border-purple-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(107,33,168,0.04)] text-center">
                 <span className="text-[10px] font-sans text-purple-700 tracking-widest uppercase font-bold block mb-1">Ficou com alguma dúvida?</span>
-                <h4 className="font-sans text-xs text-purple-900 tracking-wider uppercase mb-3 flex items-center justify-center gap-1.5 font-bold">
+                <h4 className="font-sans text-xs text-purple-900 tracking-wider uppercase mb-4 flex items-center justify-center gap-1.5 font-black">
                   <Phone className="w-3.5 h-3.5 text-purple-600 animate-bounce" /> Contatos dos Organizadores
                 </h4>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-center">
                   {/* Mãe - Michele */}
-                  <a 
+                  <motion.a 
                     href="https://wa.me/5551997058646?text=Ol%C3%A1%20Michele!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20anivers%C3%A1rio%20da%20Alice."
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 bg-purple-50/40 border border-purple-100/40 p-2.5 rounded-xl hover:scale-[1.02] hover:border-purple-300 transition-all cursor-pointer group"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex flex-col items-center justify-center text-center gap-2 bg-purple-50/40 border border-purple-100/40 p-4 rounded-2xl hover:border-purple-300 transition-all cursor-pointer group relative overflow-hidden"
                   >
-                    <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-200 transition-colors shadow-xs">
+                    <span className="absolute top-2 right-2 text-[7px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest animate-pulse">Toque Aqui</span>
+                    <div className="p-2 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-200 transition-colors shadow-xs mt-1">
                       <MessageCircle className="w-4 h-4 text-emerald-800" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="block text-[11px] font-bold text-purple-950 truncate">Michele Mattos</span>
-                      <span className="block text-[9px] text-purple-700/80 font-medium">Mãe da Alice</span>
-                      <span className="block text-[9px] text-teal-600 font-bold mt-0.5">(51) 99705-8646</span>
+                    <div className="w-full">
+                      <span className="block text-xs font-black text-purple-950">Michele Mattos</span>
+                      <span className="block text-[10px] text-purple-700/80 font-bold">Mãe da Alice</span>
+                      <span className="block text-xs text-teal-600 font-extrabold mt-1">(51) 99705-8646</span>
                     </div>
-                  </a>
+                  </motion.a>
 
                   {/* Irmã - Andriely */}
-                  <a 
+                  <motion.a 
                     href="https://wa.me/5551995476067?text=Ol%C3%A1%20Andriely!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20anivers%C3%A1rio%20da%20Alice."
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 bg-purple-50/40 border border-purple-100/40 p-2.5 rounded-xl hover:scale-[1.02] hover:border-purple-300 transition-all cursor-pointer group"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex flex-col items-center justify-center text-center gap-2 bg-purple-50/40 border border-purple-100/40 p-4 rounded-2xl hover:border-purple-300 transition-all cursor-pointer group relative overflow-hidden"
                   >
-                    <div className="p-2 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-200 transition-colors shadow-xs">
+                    <span className="absolute top-2 right-2 text-[7px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest animate-pulse">Toque Aqui</span>
+                    <div className="p-2 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-200 transition-colors shadow-xs mt-1">
                       <MessageCircle className="w-4 h-4 text-emerald-800" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="block text-[11px] font-bold text-purple-950 truncate">Andriely de Mattos</span>
-                      <span className="block text-[9px] text-purple-700/80 font-medium">Irmã da Alice</span>
-                      <span className="block text-[9px] text-teal-600 font-bold mt-0.5">(51) 99547-6067</span>
+                    <div className="w-full">
+                      <span className="block text-xs font-black text-purple-950">Andriely de Mattos</span>
+                      <span className="block text-[10px] text-purple-700/80 font-bold">Irmã da Alice</span>
+                      <span className="block text-xs text-teal-600 font-extrabold mt-1">(51) 99547-6067</span>
                     </div>
-                  </a>
+                  </motion.a>
                 </div>
               </div>
 
