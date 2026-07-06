@@ -19,7 +19,10 @@ import {
   Compass,
   Anchor,
   Waves,
-  Sun
+  Sun,
+  Camera,
+  Sliders,
+  ZoomIn
 } from "lucide-react";
 
 // Immersive tropical sound synthesizer (Ocean wave sweeps, soft marimba, steel drum/island bells)
@@ -188,13 +191,47 @@ class AmbientSynth {
 function TropicalParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {Array.from({ length: 25 }).map((_, i) => {
-        const size = Math.random() * 4 + 2;
-        const duration = Math.random() * 7 + 5;
-        const delay = Math.random() * 5;
+      {/* Intense warm glowing ocean gradient at the very bottom (Bioluminescent magical reef) */}
+      <div className="absolute bottom-0 inset-x-0 h-80 bg-gradient-to-t from-orange-500/25 via-teal-500/15 to-transparent blur-[50px] pointer-events-none" />
+      
+      {/* Super vibrant glowing circles at the bottom to represent Te Fiti's magic & sunset glow */}
+      <motion.div 
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.5, 0.8, 0.5]
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute bottom-[-150px] left-1/3 w-[500px] h-[350px] bg-gradient-to-tr from-emerald-400/30 to-teal-500/20 rounded-full blur-[120px] pointer-events-none" 
+      />
+      
+      <motion.div 
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.4, 0.7, 0.4]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute bottom-[-180px] right-1/3 w-[600px] h-[400px] bg-gradient-to-tr from-orange-500/30 to-amber-400/25 rounded-full blur-[140px] pointer-events-none" 
+      />
+
+      {/* Dynamic ocean light bar right at the bottom edge */}
+      <div className="absolute bottom-0 inset-x-0 h-4 bg-gradient-to-r from-teal-500/30 via-amber-400/40 to-orange-500/30 blur-sm pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-teal-400/60 via-amber-300/80 to-orange-400/60 pointer-events-none" />
+
+      {Array.from({ length: 45 }).map((_, i) => {
+        const size = Math.random() * 6 + 3;
+        const duration = Math.random() * 8 + 6;
+        const delay = Math.random() * 6;
         const left = Math.random() * 100;
         const isTeFiti = Math.random() > 0.6; // beautiful emerald green
-        const isSunset = Math.random() > 0.4; // warm coral pink/gold
+        const isSunset = Math.random() > 0.3; // warm coral pink/gold
 
         return (
           <motion.div
@@ -202,9 +239,9 @@ function TropicalParticles() {
             initial={{ y: "105%", opacity: 0, scale: 0.5 }}
             animate={{
               y: "-5%",
-              opacity: [0, 0.7, 0.7, 0],
-              scale: [0.5, 1.3, 0.5],
-              x: [0, Math.sin(i) * 25, 0]
+              opacity: [0, 0.85, 0.85, 0],
+              scale: [0.5, 1.4, 0.5],
+              x: [0, Math.sin(i) * 35, 0]
             }}
             transition={{
               duration: duration,
@@ -214,10 +251,10 @@ function TropicalParticles() {
             }}
             className={`absolute rounded-full ${
               isTeFiti 
-                ? 'bg-emerald-300 shadow-[0_0_8px_#34d399]' 
+                ? 'bg-emerald-300 shadow-[0_0_15px_#34d399,0_0_5px_#10b981]' 
                 : isSunset 
-                  ? 'bg-orange-400 shadow-[0_0_8px_#fb923c]' 
-                  : 'bg-teal-300 shadow-[0_0_8px_#5eead4]'
+                  ? 'bg-amber-300 shadow-[0_0_15px_#f59e0b,0_0_5px_#f97316]' 
+                  : 'bg-teal-300 shadow-[0_0_15px_#14b8a6,0_0_5px_#06b6d4]'
             }`}
             style={{
               left: `${left}%`,
@@ -236,6 +273,45 @@ export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
+  
+  // Custom Photo States
+  const defaultPhotoUrl = "/src/assets/images/alice_photo.png";
+  const fallbackPhotoUrl = "https://images.unsplash.com/photo-1595811269788-3c40173e32e8?auto=format&fit=crop&q=80&w=400&h=400";
+  const [alicePhoto, setAlicePhoto] = useState<string>(() => {
+    return localStorage.getItem("moana_alice_photo_url") || defaultPhotoUrl;
+  });
+  const [photoScale, setPhotoScale] = useState<number>(() => {
+    return parseFloat(localStorage.getItem("moana_alice_photo_scale") || "1.6");
+  });
+  const [photoX, setPhotoX] = useState<number>(() => {
+    return parseInt(localStorage.getItem("moana_alice_photo_x") || "53");
+  });
+  const [photoY, setPhotoY] = useState<number>(() => {
+    return parseInt(localStorage.getItem("moana_alice_photo_y") || "44");
+  });
+
+  // Automatically synchronize client-side uploaded photo to server
+  useEffect(() => {
+    const localPhoto = localStorage.getItem("moana_alice_photo_url");
+    if (localPhoto && localPhoto.startsWith("data:image/")) {
+      fetch("/api/upload-photo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ image: localPhoto })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          console.log("Local photo successfully synchronized with server backend.");
+        }
+      })
+      .catch(err => {
+        console.error("Error synchronizing photo with server:", err);
+      });
+    }
+  }, []);
   
   // RSVP Form States
   const [rsvpName, setRsvpName] = useState("");
@@ -532,12 +608,12 @@ export default function App() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="w-full max-w-4xl px-4 md:px-6 py-4 flex flex-col md:flex-row gap-8 items-center justify-center z-10"
           >
-            {/* LEFT COLUMN: The Beautiful Moana-Style 9:16 Invitation Card */}
+            {/* LEFT COLUMN: The Beautiful Moana-Style Invitation Card */}
             <motion.div 
               initial={{ x: -30, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="w-full max-w-sm aspect-[9/16] bg-gradient-to-b from-[#0c3942] via-[#052127] to-[#021014] rounded-[2.5rem] p-6 border border-teal-500/20 shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative overflow-hidden flex flex-col justify-between"
+              className="w-full max-w-sm min-h-[680px] bg-gradient-to-b from-[#0c3942] via-[#052127] to-[#021014] rounded-[2.5rem] p-6 border border-teal-500/20 shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative overflow-hidden flex flex-col justify-between"
             >
               {/* Tropical Border details */}
               <div className="absolute inset-3 border border-amber-400/10 rounded-[2rem] pointer-events-none" />
@@ -571,12 +647,44 @@ export default function App() {
               </div>
 
               {/* Main invitation info */}
-              <div className="text-center my-auto flex flex-col items-center">
-                <span className="text-[10px] font-sans text-orange-400 tracking-[0.3em] uppercase font-bold block mb-2">FESTA TROPICAL DA</span>
-                <h1 className="font-display text-6xl md:text-7xl text-amber-200 leading-none filter drop-shadow-[0_2px_10px_rgba(245,158,11,0.2)]">Alice</h1>
-                <span className="font-sans text-sm text-teal-100 tracking-[0.25em] block mt-1 font-bold">DE MATTOS</span>
+              <div className="text-center my-auto flex flex-col items-center py-4">
+                <span className="text-[10px] font-sans text-orange-400 tracking-[0.3em] uppercase font-bold block mb-1">FESTA TROPICAL DA</span>
+                <h1 className="font-display text-5xl md:text-6xl text-amber-200 leading-none filter drop-shadow-[0_2px_10px_rgba(245,158,11,0.2)]">Alice</h1>
+                <span className="font-sans text-xs text-teal-100 tracking-[0.25em] block mt-1 font-bold">DE MATTOS</span>
                 
-                <div className="flex items-center gap-3 w-32 my-4">
+                {/* Beautiful Portrait Frame */}
+                <div className="relative mx-auto my-4 flex flex-col items-center justify-center">
+                  <div className="relative">
+                    {/* Tropical golden/emerald glowing shadow ring */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 via-amber-400 to-orange-500 rounded-full blur-[10px] opacity-50 animate-pulse" />
+                    
+                    {/* The Photo Ring */}
+                    <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-amber-300/85 p-0.5 overflow-hidden shadow-[0_0_20px_rgba(245,158,11,0.6)] bg-[#041d22]">
+                      <div className="w-full h-full rounded-full overflow-hidden relative">
+                        <img 
+                          src={alicePhoto} 
+                          alt="Alice de Mattos" 
+                          className="w-full h-full object-cover transition-all duration-200"
+                          style={{
+                            transform: `scale(${photoScale})`,
+                            objectPosition: `${photoX}% ${photoY}%`
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.src = fallbackPhotoUrl;
+                          }}
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Tiny decorative star badge */}
+                    <div className="absolute -bottom-1 -right-1 bg-gradient-to-tr from-amber-400 to-orange-500 text-teal-950 p-1.5 rounded-full shadow-lg border border-amber-200 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 w-32 my-3">
                   <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-amber-400/40" />
                   <Anchor className="w-4 h-4 text-amber-400" />
                   <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-amber-400/40" />
