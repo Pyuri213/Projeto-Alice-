@@ -652,37 +652,7 @@ export default function App() {
                 <h1 className="font-display text-5xl md:text-6xl text-amber-200 leading-none filter drop-shadow-[0_2px_10px_rgba(245,158,11,0.2)]">Alice</h1>
                 <span className="font-sans text-xs text-teal-100 tracking-[0.25em] block mt-1 font-bold">DE MATTOS</span>
                 
-                {/* Beautiful Portrait Frame */}
-                <div className="relative mx-auto my-4 flex flex-col items-center justify-center">
-                  <div className="relative">
-                    {/* Tropical golden/emerald glowing shadow ring */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 via-amber-400 to-orange-500 rounded-full blur-[10px] opacity-50 animate-pulse" />
-                    
-                    {/* The Photo Ring */}
-                    <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-amber-300/85 p-0.5 overflow-hidden shadow-[0_0_20px_rgba(245,158,11,0.6)] bg-[#041d22]">
-                      <div className="w-full h-full rounded-full overflow-hidden relative">
-                        <img 
-                          src={alicePhoto} 
-                          alt="Alice de Mattos" 
-                          className="w-full h-full object-cover transition-all duration-200"
-                          style={{
-                            transform: `scale(${photoScale})`,
-                            objectPosition: `${photoX}% ${photoY}%`
-                          }}
-                          onError={(e) => {
-                            e.currentTarget.src = fallbackPhotoUrl;
-                          }}
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Tiny decorative star badge */}
-                    <div className="absolute -bottom-1 -right-1 bg-gradient-to-tr from-amber-400 to-orange-500 text-teal-950 p-1.5 rounded-full shadow-lg border border-amber-200 flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-white animate-pulse" />
-                    </div>
-                  </div>
-                </div>
+
 
                 <div className="flex items-center gap-3 w-32 my-3">
                   <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-amber-400/40" />
