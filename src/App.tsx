@@ -653,32 +653,39 @@ export default function App() {
               </div>
 
               {/* Main invitation info */}
-              <div className="text-center my-auto flex flex-col items-center py-4">
-                <span className="text-[10px] font-sans text-orange-500 tracking-[0.3em] uppercase font-bold block mb-1">FESTA TROPICAL DA</span>
-                <h1 className="font-display text-5.5xl md:text-6.5xl bg-gradient-to-r from-purple-700 via-orange-600 to-teal-600 bg-clip-text text-transparent leading-none filter drop-shadow-[0_2px_10px_rgba(107,33,168,0.1)]">Alice</h1>
-                <span className="font-sans text-xs text-purple-800 tracking-[0.25em] block mt-1 font-bold">DE MATTOS</span>
+              <div className="text-center my-auto flex flex-col items-center py-6">
+                <span className="text-xs font-sans text-orange-500 tracking-[0.3em] uppercase font-extrabold block mb-2">FESTA TROPICAL DA</span>
+                <h1 className="font-display text-7xl md:text-8xl bg-gradient-to-r from-purple-700 via-orange-600 to-teal-600 bg-clip-text text-transparent leading-none py-2 filter drop-shadow-[0_2px_10px_rgba(107,33,168,0.15)]">Alice</h1>
+                <span className="font-sans text-sm md:text-base text-purple-800 tracking-[0.3em] block mt-2 font-black">DE MATTOS</span>
 
-                <div className="flex items-center gap-3 w-32 my-3">
-                  <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-purple-400/30" />
-                  <Anchor className="w-4 h-4 text-purple-600" />
-                  <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-400/30" />
+                <div className="flex items-center gap-3 w-40 my-4">
+                  <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-purple-400/40" />
+                  <Anchor className="w-5 h-5 text-purple-600 animate-pulse" />
+                  <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-purple-400/40" />
                 </div>
 
-                <p className="text-xs text-purple-950/80 leading-relaxed max-w-[220px]">
+                <p className="text-xs sm:text-sm text-purple-950/90 leading-relaxed max-w-[260px] font-medium">
                   Venha se divertir com muitos jogos, lanchinhos e a magia das ilhas tropicais!
                 </p>
               </div>
 
               {/* Core Date & Location highlighted in the card */}
-              <div className="text-center mb-4">
-                <div className="bg-purple-50/80 border border-purple-100/80 rounded-2xl py-2.5 px-3 mx-2 shadow-sm">
-                   <span className="block text-purple-600 text-[10px] tracking-widest font-bold uppercase">DOMINGO</span>
-                   <span className="block text-2xl font-bold text-purple-950 mt-0.5">25 DE JULHO</span>
-                   <span className="block text-orange-600 text-[10px] font-bold tracking-widest uppercase mt-0.5">ÀS 16:00 HORAS</span>
+              <div className="text-center flex flex-col items-center justify-center w-full px-2 mb-4">
+                <div className="w-full bg-purple-50/80 border border-purple-100/80 rounded-2xl py-3 px-4 shadow-sm">
+                   <span className="block text-purple-600 text-[10px] sm:text-xs tracking-[0.2em] font-extrabold uppercase">DOMINGO</span>
+                   <span className="block text-2.5xl font-black text-purple-950 mt-1 leading-none">25 DE JULHO</span>
+                   <span className="block text-orange-600 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase mt-1">ÀS 16:00 HORAS</span>
                 </div>
                 
-                <p className="text-[10px] text-teal-600 tracking-wider uppercase font-bold mt-4">Salão do Condomínio Michelangelo</p>
-                <p className="text-[9px] text-purple-700/70 font-medium">Av. Getúlio Vargas, 72 - Zona 1</p>
+                <div className="mt-4 flex flex-col items-center justify-center text-center w-full">
+                  <p className="text-xs sm:text-sm text-teal-700 tracking-wider uppercase font-black flex items-center justify-center gap-1">
+                    <MapPin className="w-4 h-4 text-orange-500 animate-bounce shrink-0" />
+                    Salão do Condomínio Michelangelo
+                  </p>
+                  <p className="text-xs sm:text-xs text-purple-900/80 font-bold mt-1">
+                    Av. Getúlio Vargas, 72 - Zona 1
+                  </p>
+                </div>
               </div>
             </motion.div>
 
@@ -717,41 +724,93 @@ export default function App() {
               <div className="grid grid-cols-2 gap-3">
                 
                 {/* RSVP Button */}
-                <button 
+                <motion.button 
                   id="btn-rsvp-open"
                   onClick={() => setActiveModal("rsvp")}
-                  className={`p-4 rounded-2xl border text-left transition-all hover:scale-[1.02] flex flex-col justify-between aspect-[1.3/1] shadow-sm group cursor-pointer ${
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -4,
+                    boxShadow: "0 10px 25px -5px rgba(168,85,247,0.12)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  animate={{
+                    boxShadow: rsvpConfirmed 
+                      ? ["0 4px 6px rgba(16,185,129,0.02)", "0 4px 15px rgba(16,185,129,0.15)", "0 4px 6px rgba(16,185,129,0.02)"]
+                      : ["0 4px 6px rgba(168,85,247,0.02)", "0 4px 15px rgba(168,85,247,0.15)", "0 4px 6px rgba(168,85,247,0.02)"]
+                  }}
+                  transition={{
+                    boxShadow: {
+                      repeat: Infinity,
+                      duration: 3,
+                      ease: "easeInOut"
+                    }
+                  }}
+                  className={`p-4 rounded-2xl border text-left flex flex-col justify-between aspect-[1.3/1] shadow-sm group cursor-pointer transition-colors ${
                     rsvpConfirmed 
-                    ? "bg-emerald-50 border-emerald-200 hover:border-emerald-300" 
-                    : "bg-white/80 border-purple-100 hover:border-purple-300"
+                    ? "bg-emerald-50 border-emerald-200" 
+                    : "bg-white border-purple-100 hover:border-purple-300"
                   }`}
                 >
                   <div className="flex justify-between items-start w-full">
-                    <div className={`p-2 rounded-xl ${rsvpConfirmed ? 'bg-emerald-100 text-emerald-600' : 'bg-purple-50 text-purple-600 group-hover:text-orange-500'}`}>
+                    <motion.div 
+                      animate={{ y: [-1, 1, -1] }}
+                      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                      className={`p-2 rounded-xl ${rsvpConfirmed ? 'bg-emerald-100 text-emerald-600' : 'bg-purple-50 text-purple-600 group-hover:text-orange-500'}`}
+                    >
                       <Waves className="w-5 h-5" />
-                    </div>
-                    {rsvpConfirmed && <span className="text-[8px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Confirmado</span>}
+                    </motion.div>
+                    {rsvpConfirmed ? (
+                      <span className="text-[8px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Confirmado</span>
+                    ) : (
+                      <span className="text-[7.5px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full font-extrabold uppercase tracking-widest animate-pulse">Toque Aqui</span>
+                    )}
                   </div>
                   <div>
-                    <h4 className="font-sans text-xs tracking-wider font-bold mb-0.5 text-purple-950">CONFIRMAR PRESENÇA</h4>
-                    <p className="text-[9px] text-purple-700/70 group-hover:text-purple-950 transition-colors">Garanta o seu lugar na tripulação!</p>
+                    <h4 className="font-sans text-xs tracking-wider font-black mb-0.5 text-purple-950 flex items-center gap-1">
+                      CONFIRMAR PRESENÇA
+                    </h4>
+                    <p className="text-[9px] text-purple-700/80 font-semibold group-hover:text-purple-950 transition-colors">Garanta o seu lugar na tripulação!</p>
                   </div>
-                </button>
+                </motion.button>
 
                 {/* Location Map Button */}
-                <button 
+                <motion.button 
                   id="btn-location-open"
                   onClick={() => setActiveModal("location")}
-                  className="bg-white/80 border border-purple-100 p-4 rounded-2xl text-left transition-all hover:scale-[1.02] hover:border-teal-300 shadow-sm group cursor-pointer"
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -4,
+                    boxShadow: "0 10px 25px -5px rgba(20,184,166,0.12)"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  animate={{
+                    boxShadow: ["0 4px 6px rgba(20,184,166,0.02)", "0 4px 15px rgba(20,184,166,0.15)", "0 4px 6px rgba(20,184,166,0.02)"]
+                  }}
+                  transition={{
+                    boxShadow: {
+                      repeat: Infinity,
+                      duration: 3,
+                      ease: "easeInOut",
+                      delay: 0.5
+                    }
+                  }}
+                  className="bg-white border border-purple-100 p-4 rounded-2xl text-left flex flex-col justify-between aspect-[1.3/1] shadow-sm group cursor-pointer transition-colors hover:border-teal-300"
                 >
-                  <div className="p-2 rounded-xl bg-teal-50 text-teal-600 group-hover:text-orange-500">
-                    <Compass className="w-5 h-5" />
+                  <div className="flex justify-between items-start w-full">
+                    <motion.div 
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                      className="p-2 rounded-xl bg-teal-50 text-teal-600 group-hover:text-orange-500"
+                    >
+                      <Compass className="w-5 h-5" />
+                    </motion.div>
+                    <span className="text-[7.5px] bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded-full font-extrabold uppercase tracking-widest animate-pulse">Toque Aqui</span>
                   </div>
                   <div>
-                    <h4 className="font-sans text-xs tracking-wider font-bold mb-0.5 text-purple-950">LOCALIZAÇÃO</h4>
-                    <p className="text-[9px] text-purple-700/70 group-hover:text-purple-950 transition-colors">Veja como chegar no condomínio.</p>
+                    <h4 className="font-sans text-xs tracking-wider font-black mb-0.5 text-purple-950">LOCALIZAÇÃO</h4>
+                    <p className="text-[9px] text-purple-700/80 font-semibold group-hover:text-purple-950 transition-colors">Veja como chegar no condomínio.</p>
                   </div>
-                </button>
+                </motion.button>
 
               </div>
 
